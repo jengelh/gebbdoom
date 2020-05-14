@@ -1,5 +1,5 @@
 \section{Video Manager}
-Before continuing our trip through the code and looking at the rendering in  \cw{D\_Display}, let's take a few pages to study the graphics stack where each frame is stored and manipulated. The video system is located in the core. It maintains and exposes two data structures: a set of five framebuffers, and one dirtybox (used as a "dirty rectangles"). All write operations update the framebuffers and the box.\\
+Before continuing our trip through the code and looking at the rendering in  \cw{D\_Display}, let's take a few pages to study the graphics stack where each frame is stored and manipulated. The video system is located in the core. It maintains and exposes two data structures: a set of five framebuffers, and one dirtybox (used as a "dirty rectangle"). All write operations update the framebuffers and the box.\\
 \par
 \cccode{kernel_renderer.c}{Five framebuffers.}
 \par
@@ -23,7 +23,7 @@ The video system implementation must provide four functions to the core. \cw{I\_
 %\caption{Video system interface}
 \end{figure}
 \par
-To host the framebuffer in the core and not in the video system itself was an audacious trade-off: it was a performance hit since data had to be copied twice before reaching the screen. But it tremendously improved portability since the framebuffer had been abstracted. It also opened the door to reading back from the core framebuffer. This capability allowed new effects such as the "predator" transparency seen with the "spectre" demon.\\
+To host the framebuffer in the core and not in the video system itself was an audacious trade-off: it was a performance hit, since data had to be copied twice before reaching the screen. But it tremendously improved portability, since the framebuffer had been abstracted. It also opened the door to reading back from the core framebuffer. This capability allowed new effects such as the "predator" transparency seen with the "spectre" demon.\\
 \par
  % The performance hit was not too back on VLB systems. If you refer back to the architecture on page \pageref{vlbarchitecture}, you will see that it allowed transfer of one framebuffer to the video system while the next frame was being generated in the cachelines. This parallel pipeline allowed the framerate to be 90\% of what it would have been with direct access to the VGA.\\
  \trivia{Because \doom{} renders a full screen on every frame, there is no need to "clear" the framebuffer like Wolfenstein 3D did. If we were to interrupt the engine while rendering a frame to peek inside framebuffer \#0, it would look like a composition of a previous frame and the unfinished new one.}\\
@@ -37,7 +37,7 @@ To host the framebuffer in the core and not in the video system itself was an au
 The life of a frame is always the same, regardless of what the game is rendering:
 \begin{enumerate}
 \item All write operations are done in framebuffer \#0. Each time the engine updates this buffer, it also updates the \cw{dirtybox} to mark which area has been touched.
-\item After a major write sequence, the engine calls \cw{I\_UpdateNoBlit} which triggers the video system to read framebuffer \#0, optimizing for the smallest data transfer possible via the \cw{dirtybox}. On DOS the VGA subsystem copies content to the VGA hardware in one of its three VRAM framebuffers. Each VGA buffer has its own dirtybox \cw{updatebox} to speed up blitting but this remains an expensive operation.
+\item After a major write sequence, the engine calls \cw{I\_UpdateNoBlit} which triggers the video system to read framebuffer \#0, optimizing for the smallest data transfer possible via the \cw{dirtybox}. On DOS, the VGA subsystem copies content to the VGA hardware in one of its three VRAM framebuffers. Each VGA buffer has its own dirtybox \cw{updatebox} to speed up blitting, but this remains an expensive operation.
 
 \item Once a frame has been completed, the engine calls \cw{I\_FinishUpdate}  which signals to the video system that framebuffer \#0 will no longer be updated. On DOS, the implementation of \cw{I\_FinishUpdate} simply updates the start address of the CRTC which is a lightweight operation.
 \end{enumerate}
@@ -57,7 +57,7 @@ The four other framebuffers in the core are used intermittently for temporary st
 
 
 
-The content of function \cw{I\_UpdateBox} to transfer data from RAM to VRAM may look surprising. After all the hardware discussion about 32-bit CPUs and the 32-bit VL-Bus it is uncanny to see the transfer loop do it 16 bits at a time (\cw{short *dest;}). It turns out this was a deliberate choice.\\
+The content of function \cw{I\_UpdateBox} to transfer data from RAM to VRAM may look surprising. After all, the hardware discussion about 32-bit CPUs and the 32-bit VL-Bus it is uncanny to see the transfer loop do it 16 bits at a time (\cw{short *dest;}). It turns out this was a deliberate choice.\\
 \par
 \fq{Our artwork was done in 8x8 blocks, or "ebes" as Tom called them.  A 32-bit loop would have needed more code to handle widths that were an odd number of ebes.  It might have been a speedup, but the bus and video card would have to have handled full 32-bit writes, and I don't recall that being common back then.  Many VL-Bus cards were still the same basic chipset used on the ISA cards, and often still 16 bit, which meant that a 32-bit write just took 2x as long.}{John Carmack}\\
 \par

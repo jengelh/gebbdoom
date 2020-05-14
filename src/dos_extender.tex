@@ -1,5 +1,5 @@
 \section{RAM}
-With the price of RAM dropping, game developers now could count on 4 MiB. This increase should have been good news, resulting in video games with richer worlds, better assets, more characters and bigger maps. Due to the infamous way memory had to be managed it instead meant more complexity to handle and more headache.\\
+With the price of RAM dropping, game developers now could count on 4 MiB. This increase should have been good news, resulting in video games with richer worlds, better assets, more characters and bigger maps. Due to the infamous way memory had to be managed, it instead meant more complexity to handle and more headache.\\
 \par
 The fault fell a little bit on Intel and a lot on Microsoft. In 1981, IBM released its first PC, the 5150, which was built around the Intel 8088. The CPU was limited to 16-bit registers, but Intel wanted it to be able to access a 20-bit address space. To reconcile both elements, Intel's designers came up with an abomination called segmented addressing where two 16-bit registers were combined to form a 20-bit address.\\
 \par
@@ -7,11 +7,11 @@ The fault fell a little bit on Intel and a lot on Microsoft. In 1981, IBM releas
 \drawing{register_combination_20_bits_address}{}
 \vspace{-10pt}
 \par
-Pointer manipulation was error prone since different segment/offset combinations could point to the same RAM location. There were also issues related to pointer arithmetic where once the offset wrapped around, the segment was not automatically updated.\\
+Pointer manipulation was error prone since different segment/offset combinations could point to the same RAM location. There were also issues related to pointer arithmetic where, once the offset wrapped around, the segment was not automatically updated.\\
 \par
 The RAM system became a mess with the Intel 286 and the 386SX which addressed 24 bits and worsened with the 386DX and the 486 which both had a 32-bit address bus. The address space was too much for what the 20-bit segmentation trick was capable of. The solution was to resort to memory managers such as \cw{EMM386.EXE} and \cw{HIMEM.SYS}\footnote{16-bit programming and memory managers were covered in \textit{Game Engine Black Book: Wolfenstein 3D}.}, which both provided the means to work with non-addressable RAM located beyond the 1 MiB barrier.\\
 
-There would have been a simpler solution. Intel allowed its CPUs to function in two modes: the backward-compatible real mode which made the CPU behave like a very fast 8088, and protected mode which unleashed the full power of the CPU. In protected mode, 32-bit registers were large enough to address all RAM on board (this is known as flat addressing).\\
+There would have been a simpler solution. Intel allowed its CPUs to function in two modes: the backward-compatible real mode, which made the CPU behave like a very fast 8088, and protected mode which unleashed the full power of the CPU. In protected mode, 32-bit registers were large enough to address all RAM on board (this is known as flat addressing).\\
 \par
 It would have worked out if the operating system had been able to run in protected mode. However, in the name of backward compatibility, Microsoft's DOS could only handle real mode which effectively locked developers into 16-bit programming.\\ 
 \par
@@ -34,7 +34,7 @@ To allow the app to run in one mode and the OS to run in another, the two worlds
 
 \par
 \rawdrawing{realmode_app_limk_extender}
-Upon startup, the DOS extender would place hooks into the OS's Interrupt Vector Table and place its own routines there. From an application's standing point everything was transparent, the developer had no code to change. To perform a system call not hooked by the extender (e.g. \cw{int 33h} to read mouse inputs), the extender offered a special interface called DPMI on interrupt \cw{31h} which took care of translating 32-bit register requests to 16-bit so IVT routines would understand them.\\
+Upon startup, the DOS extender would place hooks into the OS's Interrupt Vector Table and place its own routines there. From an application's standpoint, everything was transparent, the developer had no code to change. To perform a system call not hooked by the extender (e.g. \cw{int 33h} to read mouse inputs), the extender offered a special interface called DPMI on interrupt \cw{31h} which took care of translating 32-bit register requests to 16-bit, so that IVT routines would understand them.\\
 \par
 \trivia{DPMI (DOS Protected Mode Interface) was originally created to allow Windows 3.0 to run 32-bit applications and to be compatible with a joint operating system project with IBM called OS/2.}\\
 \par
@@ -47,7 +47,7 @@ When the extender intercepted an operating system call, it had a lot of work to 
 \item Switch the CPU back to protected mode.
 \end{enumerate} 
 
-The performance-sensitive operations were in switching between real mode and protected mode. Originally this was a problem on 286 CPUs since Intel never imagined a program might want to switch back to real mode from protected mode. Various tricks had to be used\footnote{These are detailed in \textit{Game Engine Black Book: Wolfenstein 3D}.}, among them faking a keyboard Ctrl-Alt-Del reboot to reset the CPU without actually rebooting.\\
+The performance-sensitive operations were in switching between real mode and protected mode. Originally, this was a problem on 286 CPUs, since Intel never imagined a program might want to switch back to real mode from protected mode. Various tricks had to be used\footnote{These are detailed in \textit{Game Engine Black Book: Wolfenstein 3D}.}, among them faking a keyboard Ctrl-Alt-Del reboot to reset the CPU without actually rebooting.\\
 \par
 On the other hand, switching from real mode to protected mode is simple. Setting the Control Register from bit 0 to 1 takes six instructions.\\
 \par

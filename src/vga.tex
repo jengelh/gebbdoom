@@ -78,7 +78,7 @@ By licensing the ET4000 \circled{1}, Britek Electronics only had to provide RAM 
 \subsection{VL-Bus}
 As much as the video card manufacturer could optimize their product, there was still a huge bottleneck that was out of their control. Information written by the CPU still had to transit over the ISA bus.\\
 \par
- Introduced in 1981, the first incarnation of the ISA bus had an 8-bit data path running at 4.77 MHz. It was upgraded in 1984, bringing its width to 16 bits and running at 6 MHz. After 10 years of service it was starting to show its age and was considered a performance killer.\\
+Introduced in 1981, the first incarnation of the ISA bus had an 8-bit data path running at 4.77 MHz. It was upgraded in 1984, bringing its width to 16 bits and running at 6 MHz. After 10 years of service, it was starting to show its age and was considered a performance killer.\\
 \par
 \drawing{bus_isa}{ISA Bus}
 \par
@@ -86,13 +86,13 @@ Fed up with the state of things, hardware manufacturers teamed up to form VESA (
 \par 
 The VLB (VESA Local Bus) doubled ISA's bus data lines to 32 bits and increased its frequency to 33 Mhz, making it up to 10x faster when compared to the slowest ISA bus.\\
 \par
-The chip design for the VLB controller was relatively simple because many of the core instructions (interrupts and port-mapped I/O) were still hosted by the ISA circuits already on the motherboard, while memory-mapped I/O and DMA data paths were on the same local bus as the one used by the CPU (see figure \ref{bus_vlb}). The speed of the system data bus was based on the clock rate of the motherboard's crystal which meant the bus ran at the same speed as the CPU.\\
+The chip design for the VLB controller was relatively simple because many of the core instructions (interrupts and port-mapped I/O) were still hosted by the ISA circuits already on the motherboard, while memory-mapped I/O and DMA data paths were on the same local bus as the one used by the CPU (see figure \ref{bus_vlb}). The speed of the system data bus was based on the clock rate of the motherboard's crystal, which meant the bus ran at the same speed as the CPU.\\
 \par
-\drawing{bus_vlb}{VL-Bus, a.k.a VESA Local Bus, a.k.a VLB}
+\drawing{bus_vlb}{VL-Bus, a.k.a.\ VESA Local Bus, a.k.a.\ VLB}
 \label{vlbarchitecture}
 
 \par
-Closely tying the VL-Bus architecture to the 486 Bus Unit brought unmatched performance and considerably facilitated adoption since there was no need for a chipset. The term 'local bus' meant that the address, data and control signals were directly connected to the processor, so devices on the bus were connected via nothing more than some electrical buffering. This is one of the reasons for its simplicity, but it is also the reason for many of its limitations.\\
+Closely tying the VL-Bus architecture to the 486 Bus Unit brought unmatched performance and considerably facilitated adoption since there was no need for a chipset. The term "local bus" meant that the address, data and control signals were directly connected to the processor, so devices on the bus were connected via nothing more than some electrical buffering. This is one of the reasons for its simplicity, but it is also the reason for many of its limitations.\\
 \par
 Forced to run at the same speed as the CPU, the VL-Bus suffered instability as frequencies reached 40 Mhz, resulting in crashes. Past this speed, the system became increasingly intolerant to timing variations\footnote{The issue did not affect 486 DX-66Mhz, where the bus ran at only 33Mhz.}. The root problem is that a local bus is by definition synchronous. Expansion card vendors had the difficult task of ensuring their products could run at a range of speeds, the upper limit of the range being undefined as new processors were introduced. This was a recipe for compatibility problems\footnote{Such problems were experienced by users of VL-Bus systems using the AMD 80MHz processors, which had a 40MHz bus clock.}.\\
 \par
